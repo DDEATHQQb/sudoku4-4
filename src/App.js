@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
+
+import Cell from "./Cell";
 import "./App.css";
 
 class App extends Component {
@@ -33,7 +34,7 @@ class App extends Component {
       const square = new Set();
       for (let j = 0; j < 4; j++) {
         horizontal.add(board[i][j]);
-        vertical.add(board[i][j]);
+        vertical.add(board[j][i]);
         square.add(
           board[2 * (i % 2) + (j % 2)][
             2 * Math.floor(i / 2) + Math.floor(j / 2)
@@ -55,7 +56,25 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="board"></div>
+        <div className="board">
+          {this.state.board.map((row, i) => {
+            row.map((cell, j) => (
+              <Cell
+                key={`cell-${i}-${j}`}
+                onClick={() => this.handleClick(i, j, cell)}
+                number={cell}
+                isInitial={this.state.initFlags[i][j]}
+              />
+            ));
+          })}
+        </div>
+        <button onClick={this.submit}>Submit</button>
+        {this.state.complete && (
+          <p style={{ color: "green" }}>Board is complete!</p>
+        )}
+        {this.state.invalid && (
+          <p style={{ color: "red" }}>Board is invalid!</p>
+        )}
       </div>
     );
   }
